@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Writing strings to Redis"""
 from uuid import uuid4
-from typing import Any
+from typing import Union
 import redis
 
 
@@ -14,7 +14,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def store(self, data: Any) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         '''method that takes a data argument and returns a string'''
         random_key = str(uuid4())
         self._redis.set(random_key, data)
