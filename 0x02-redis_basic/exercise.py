@@ -12,7 +12,7 @@ class Cache:
     def __init__(self) -> None:
         '''init method that store an instance of the Redis client'''
         self._redis = redis.Redis()
-        self._redis.flushdb
+        self._redis.flushdb()
 
     def store(self, data: Any) -> str:
         '''method that takes a data argument and returns a string'''
