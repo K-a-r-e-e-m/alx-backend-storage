@@ -2,7 +2,20 @@
 """Writing strings to Redis"""
 from uuid import uuid4
 from typing import Union, Optional, Callable
+from functools import wraps
 import redis
+
+
+def count_calls(method: Callable) -> Callable:
+    '''decorator takes a single method Callable argument and returns a Callable'''
+    key = method.__qualname__
+
+    @wraps(method)
+    def wrapper(self, *args, **kwds):
+        '''wrapper function body increamets when class methods called'''
+        self._redis.incr(key)
+        return method(self, *args, **kwds)
+    return wrapper
 
 
 class Cache:
@@ -14,6 +27,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         '''method that takes a data argument and returns a string'''
         random_key = str(uuid4())
